@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
+using MinotaurFight.Core;
 
 namespace MinotaurFight.Combat
 {
-    public abstract class Skill : ISkill
+    [System.Serializable]
+    public abstract class Skill
     {
-        public abstract void ExecuteSkill(){ }
+        public abstract void ExecuteSkill();
     }
 }
