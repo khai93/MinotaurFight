@@ -2,6 +2,6 @@
 {
     public interface ISkill
     {
-        void ExecuteSkill();
+        void ExecuteSkill(bool isKeyDown);
     }
 }
