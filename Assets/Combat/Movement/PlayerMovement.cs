@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace MinotaurBattle.Combat
+namespace MinotaurFight.Combat
 {
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(SpriteRenderer))]
