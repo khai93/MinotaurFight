@@ -74,5 +74,7 @@ namespace MinotaurFight.Combat
                 projectilePrefab.transform.position = FirePoint.position;
             }
         }
+
+        public bool IsActive() => _isSkillActive;
     }
 }
