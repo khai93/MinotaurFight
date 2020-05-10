@@ -21,5 +21,7 @@ namespace MinotaurFight.Core
             }
 
         }
+
+        public bool IsAnySkillActive() => skills.Any(s => s.IsActive());
     }
 }
