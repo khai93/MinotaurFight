@@ -1,23 +1,31 @@
 ﻿using UnityEngine;
+using MinotaurFight.Core;
 
 namespace MinotaurFight.Combat
 {
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(SpriteRenderer))]
     [RequireComponent(typeof(KeyboardKeyBinder))]
+    [RequireComponent(typeof(EntityKnockback))]
     [RequireComponent(typeof(Animator))]
     public class PlayerMovement : MonoBehaviour
     {
         [SerializeField]
         private float WalkSpeed;
 
+        [SerializeField]
+        private float DoubleTapMaxTime;
+
         private Direction _Facing = Direction.Right;
         private float _scalar = 0;
+        private Direction _lastTapDirection;
+        private float _lastTapTime;
 
         private Rigidbody2D _rb;
         private SpriteRenderer _sr;
         private KeyboardKeyBinder _keyBinder;
         private Animator _anim;
+        private EntityKnockback _knockback;
 
         private void Awake()
         {
@@ -25,6 +33,7 @@ namespace MinotaurFight.Combat
             _sr = GetComponent<SpriteRenderer>();
             _keyBinder = GetComponent<KeyboardKeyBinder>();
             _anim = GetComponent<Animator>();
+            _knockback = GetComponent<EntityKnockback>();
         }
 
         private void Flip()
@@ -50,6 +59,16 @@ namespace MinotaurFight.Combat
                     Flip();
 
                 scalar -= 1;
+                _lastTapDirection = Direction.Left;
+
+                var lastTapInRange = (Time.time - _lastTapTime) < DoubleTapMaxTime;
+                if (_lastTapDirection == Direction.Left && lastTapInRange)
+                {
+                    _knockback.Knockback(5);
+                } else
+                {
+                    _lastTapTime = Time.time;
+                }
             }
             else if (dirPressed == Direction.Right)
             {
@@ -57,6 +76,17 @@ namespace MinotaurFight.Combat
                     Flip();
 
                 scalar += 1;
+                _lastTapDirection = Direction.Right;
+
+                var lastTapInRange = (Time.time - _lastTapTime) < DoubleTapMaxTime;
+                if (_lastTapDirection == Direction.Right && lastTapInRange)
+                {
+                    _knockback.Knockback(-5);
+                }
+                else
+                {
+                    _lastTapTime = Time.time;
+                }
             }
 
             _anim.SetInteger("MovementScalar", (int) scalar);
@@ -69,13 +99,5 @@ namespace MinotaurFight.Combat
             _anim.SetInteger("MovementScalar", 0);
             _scalar = 0;
         }
-    }
-
-    public enum Direction
-    {
-        Left,
-        Right,
-        Up,
-        Down
     }
 }

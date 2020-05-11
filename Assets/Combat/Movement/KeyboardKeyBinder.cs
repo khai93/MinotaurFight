@@ -26,6 +26,7 @@ namespace MinotaurFight.Combat
         private PlayerJump _playerJump;
         private PlayerMovement _playerMovement;
         private SkillsManager _skillsManager;
+
         private KeyCode[] _skillKeys = new KeyCode[3];
 
         private void Awake()
@@ -79,7 +80,6 @@ namespace MinotaurFight.Combat
             {
                 if (Input.GetKeyDown(_skillKeys[i]))
                 {
-                    Debug.Log("Down");
                     _skillsManager.skills[i].ExecuteSkill(true);
                 }
 
