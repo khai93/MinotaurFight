@@ -1,23 +1,39 @@
 ﻿using UnityEngine;
+using MinotaurFight.Core;
 
 namespace MinotaurFight.Combat
 {
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(SpriteRenderer))]
     [RequireComponent(typeof(KeyboardKeyBinder))]
+    [RequireComponent(typeof(EntityKnockback))]
     [RequireComponent(typeof(Animator))]
     public class PlayerMovement : MonoBehaviour
     {
         [SerializeField]
         private float WalkSpeed;
 
+        [SerializeField]
+        private float MaxDashes;
+
+        [SerializeField]
+        private float DashRecoveryTime;
+
+        [SerializeField]
+        private float DoubleTapMaxTime;
+
         private Direction _Facing = Direction.Right;
         private float _scalar = 0;
+        private Direction _lastTapDirection;
+        private float _lastTapTime;
+        private float _nextRecoveryTime;
+        private float _dashesLeft;
 
         private Rigidbody2D _rb;
         private SpriteRenderer _sr;
         private KeyboardKeyBinder _keyBinder;
         private Animator _anim;
+        private EntityKnockback _knockback;
 
         private void Awake()
         {
@@ -25,6 +41,8 @@ namespace MinotaurFight.Combat
             _sr = GetComponent<SpriteRenderer>();
             _keyBinder = GetComponent<KeyboardKeyBinder>();
             _anim = GetComponent<Animator>();
+            _knockback = GetComponent<EntityKnockback>();
+            _dashesLeft = MaxDashes;
         }
 
         private void Flip()
@@ -36,6 +54,7 @@ namespace MinotaurFight.Combat
 
         private void FixedUpdate()
         {
+            CheckDashes();
             _rb.velocity = new Vector2(WalkSpeed * _scalar * 10 * Time.deltaTime, _rb.velocity.y);
         }
 
@@ -50,6 +69,18 @@ namespace MinotaurFight.Combat
                     Flip();
 
                 scalar -= 1;
+                
+                var lastTapInRange = (Time.time - _lastTapTime) < DoubleTapMaxTime;
+                if (_lastTapDirection == Direction.Left && lastTapInRange && _dashesLeft > 0)
+                {
+                    _dashesLeft--;
+                    _knockback.Knockback(50);
+                } else 
+                {
+                    _lastTapTime = Time.time;
+                }
+
+                _lastTapDirection = Direction.Left;
             }
             else if (dirPressed == Direction.Right)
             {
@@ -57,6 +88,17 @@ namespace MinotaurFight.Combat
                     Flip();
 
                 scalar += 1;
+                
+                var lastTapInRange = (Time.time - _lastTapTime) < DoubleTapMaxTime;
+                if (_lastTapDirection == Direction.Right && lastTapInRange && _dashesLeft > 0)
+                {
+                    _dashesLeft--;
+                    _knockback.Knockback(-50);
+                } else
+                {
+                    _lastTapTime = Time.time;
+                }
+                _lastTapDirection = Direction.Right;
             }
 
             _anim.SetInteger("MovementScalar", (int) scalar);
@@ -64,18 +106,26 @@ namespace MinotaurFight.Combat
             _scalar = scalar;
         }
 
+        private void CheckDashes()
+        {
+            if (_dashesLeft < MaxDashes && Mathf.Approximately(_nextRecoveryTime, 0f))
+            {
+                _nextRecoveryTime = Time.time + DashRecoveryTime;
+                Debug.Log("Recovery Time Started");
+            }
+
+            if (Time.time >= _nextRecoveryTime && !Mathf.Approximately(_nextRecoveryTime, 0f))
+            {
+                _nextRecoveryTime = 0;
+                _dashesLeft++;
+                Debug.Log("Dash Replinished");
+            }
+        }
+
         public void ResetScalar()
         {
             _anim.SetInteger("MovementScalar", 0);
             _scalar = 0;
         }
-    }
-
-    public enum Direction
-    {
-        Left,
-        Right,
-        Up,
-        Down
     }
 }

@@ -10,7 +10,7 @@ namespace MinotaurFight.Combat
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(PlayerJump))]
     [RequireComponent(typeof(SpriteRenderer))]
-    public class ChargeAndShootProjectileSkill : MonoBehaviour, ISkill
+    public class ShootProjectileUltimate : MonoBehaviour, ISkill
     {
         [SerializeField]
         private Transform FirePoint;
@@ -19,7 +19,7 @@ namespace MinotaurFight.Combat
         private GameObject ProjectilePrefab;
 
         [SerializeField]
-        private float ChargeRate;
+        private float Damage;
 
         [SerializeField]
         private float Cooldown;
@@ -48,38 +48,29 @@ namespace MinotaurFight.Combat
 
             if (canCastSkill && _plyJump.IsGrounded)
             {
-                if (_isSkillActive && !isKeyDown)
+                if (!_isSkillActive && isKeyDown)
                 {
-                    _isSkillActive = false;
-                    _rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
-                    _anim.SetTrigger("Shoot");
-
-                    var projectilePrefab = TrySpawnProjectile();
-
-                    float chargeTimePassedHalved = (Time.time - _startChargeTime)/2 + 0.25f;
-                    float chargedAmount = chargeTimePassedHalved * ChargeRate;
-                    float charged = chargedAmount < 10 ? chargedAmount : 10;
-
-                    if (projectilePrefab)
-                    {
-                        projectilePrefab.transform.localScale = new Vector3(charged, charged, charged);
-
-                        IMultiplier multiplier = projectilePrefab.GetComponent<IMultiplier>();
-                        multiplier.SetMultiplier(charged*3);
-                    }
-
-
-                    _cd = Time.time + Cooldown;
-                }
-                else if (!_isSkillActive && isKeyDown)
-                {
-
                     _isSkillActive = true;
-                    _rb.constraints = RigidbodyConstraints2D.FreezeAll;
-                    _anim.SetTrigger("StartCharge");
-                    _startChargeTime = Time.time;
+                    
+                    _rb.constraints = _rb.constraints = RigidbodyConstraints2D.FreezeAll;
+                    _anim.SetTrigger("Ult");
                 }
             }
+        }
+
+        public void SpawnUltProjectile()
+        {
+            var projectilePrefab = TrySpawnProjectile();
+
+            if (projectilePrefab)
+            {
+                var damage = projectilePrefab.GetComponent<DamageOnTouch>();
+                damage.SetDamage(Damage);
+            }
+
+            _rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
+            _isSkillActive = false;
+            _cd = Time.time + Cooldown;
         }
 
         private GameObject TrySpawnProjectile()
@@ -92,7 +83,8 @@ namespace MinotaurFight.Combat
             {
                 projectilePrefab.transform.position = flippedFirepoint;
                 projectilePrefab.transform.right = projectilePrefab.transform.right * -1;
-            } else
+            }
+            else
             {
                 projectilePrefab.transform.position = FirePoint.position;
             }
