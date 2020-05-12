@@ -47,7 +47,11 @@ namespace MinotaurFight.Combat
         public void SetMultiplier(float multiplier)
         {
             DamageMultiplier = multiplier;
-            Debug.Log("Damage: " + Damage * DamageMultiplier);
+        }
+
+        public void SetDamage(float damage)
+        {
+            Damage = damage;
         }
 
         private void DealDamage(Collider2D collision)
