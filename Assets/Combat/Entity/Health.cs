@@ -21,14 +21,17 @@ namespace MinotaurFight.Combat
 
         private float HealthRegenCD;
         private float _health;
+        private bool _canTakeDamage = true;
 
         private SpriteRenderer _renderer;
 
         public void TakeDamage(float damage)
         {
-            _health -= damage;
-
-            Damaged?.Invoke();
+            if (_canTakeDamage)
+            {
+                _health -= damage;
+                Damaged?.Invoke();
+            }
         }
 
         private void Awake()
@@ -60,6 +63,11 @@ namespace MinotaurFight.Combat
         public void SetHealthPercentage(float percentage)
         {
             _health = MaxHealth * (percentage / 100);
+        }
+
+        public void SetDamageableStatus(bool status)
+        {
+            _canTakeDamage = status;
         }
 
         private void Die()

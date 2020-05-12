@@ -18,9 +18,7 @@ namespace MinotaurFight.Combat
 
         public void Knockback(float force)
         {
-            float scalar = (_spr.flipX ? 1 : -1);
-            Debug.Log("hello");
-            _rb.AddForce(transform.right * scalar * (force * 25), ForceMode2D.Force);
+            _rb.AddForce(transform.right * -1 * (force * 250), ForceMode2D.Force);
         }
     }
 }

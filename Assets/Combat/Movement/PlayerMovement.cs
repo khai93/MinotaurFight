@@ -14,12 +14,20 @@ namespace MinotaurFight.Combat
         private float WalkSpeed;
 
         [SerializeField]
+        private float MaxDashes;
+
+        [SerializeField]
+        private float DashRecoveryTime;
+
+        [SerializeField]
         private float DoubleTapMaxTime;
 
         private Direction _Facing = Direction.Right;
         private float _scalar = 0;
         private Direction _lastTapDirection;
         private float _lastTapTime;
+        private float _nextRecoveryTime;
+        private float _dashesLeft;
 
         private Rigidbody2D _rb;
         private SpriteRenderer _sr;
@@ -34,6 +42,7 @@ namespace MinotaurFight.Combat
             _keyBinder = GetComponent<KeyboardKeyBinder>();
             _anim = GetComponent<Animator>();
             _knockback = GetComponent<EntityKnockback>();
+            _dashesLeft = MaxDashes;
         }
 
         private void Flip()
@@ -45,6 +54,7 @@ namespace MinotaurFight.Combat
 
         private void FixedUpdate()
         {
+            CheckDashes();
             _rb.velocity = new Vector2(WalkSpeed * _scalar * 10 * Time.deltaTime, _rb.velocity.y);
         }
 
@@ -59,16 +69,18 @@ namespace MinotaurFight.Combat
                     Flip();
 
                 scalar -= 1;
-                _lastTapDirection = Direction.Left;
-
+                
                 var lastTapInRange = (Time.time - _lastTapTime) < DoubleTapMaxTime;
-                if (_lastTapDirection == Direction.Left && lastTapInRange)
+                if (_lastTapDirection == Direction.Left && lastTapInRange && _dashesLeft > 0)
                 {
-                    _knockback.Knockback(5);
-                } else
+                    _dashesLeft--;
+                    _knockback.Knockback(50);
+                } else 
                 {
                     _lastTapTime = Time.time;
                 }
+
+                _lastTapDirection = Direction.Left;
             }
             else if (dirPressed == Direction.Right)
             {
@@ -76,22 +88,38 @@ namespace MinotaurFight.Combat
                     Flip();
 
                 scalar += 1;
-                _lastTapDirection = Direction.Right;
-
+                
                 var lastTapInRange = (Time.time - _lastTapTime) < DoubleTapMaxTime;
-                if (_lastTapDirection == Direction.Right && lastTapInRange)
+                if (_lastTapDirection == Direction.Right && lastTapInRange && _dashesLeft > 0)
                 {
-                    _knockback.Knockback(-5);
-                }
-                else
+                    _dashesLeft--;
+                    _knockback.Knockback(-50);
+                } else
                 {
                     _lastTapTime = Time.time;
                 }
+                _lastTapDirection = Direction.Right;
             }
 
             _anim.SetInteger("MovementScalar", (int) scalar);
 
             _scalar = scalar;
+        }
+
+        private void CheckDashes()
+        {
+            if (_dashesLeft < MaxDashes && Mathf.Approximately(_nextRecoveryTime, 0f))
+            {
+                _nextRecoveryTime = Time.time + DashRecoveryTime;
+                Debug.Log("Recovery Time Started");
+            }
+
+            if (Time.time >= _nextRecoveryTime && !Mathf.Approximately(_nextRecoveryTime, 0f))
+            {
+                _nextRecoveryTime = 0;
+                _dashesLeft++;
+                Debug.Log("Dash Replinished");
+            }
         }
 
         public void ResetScalar()
