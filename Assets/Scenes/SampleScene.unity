@@ -156,8 +156,8 @@ MonoBehaviour:
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
   m_Priority: 10
-  m_StandbyUpdate: 2
-  m_LookAt: {fileID: 0}
+  m_StandbyUpdate: 1
+  m_LookAt: {fileID: 984336860}
   m_Follow: {fileID: 984336860}
   m_Lens:
     FieldOfView: 60
@@ -182,7 +182,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 57951701}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.501, y: -2.271, z: -10}
+  m_LocalPosition: {x: -4.501, y: -2.271, z: -12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1566904308}
@@ -346,7 +346,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.501, y: -0.2709999, z: -10}
+  m_LocalPosition: {x: -4.501, y: -0.2709999, z: -12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -369,10 +369,12 @@ GameObject:
   - component: {fileID: 984336863}
   - component: {fileID: 984336862}
   - component: {fileID: 984336865}
-  - component: {fileID: 984336866}
   - component: {fileID: 984336868}
   - component: {fileID: 984336867}
   - component: {fileID: 984336869}
+  - component: {fileID: 984336866}
+  - component: {fileID: 984336870}
+  - component: {fileID: 984336871}
   m_Layer: 0
   m_Name: Luna
   m_TagString: Untagged
@@ -563,6 +565,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WalkSpeed: 6.78
+  MaxDashes: 3
+  DashRecoveryTime: 3
   DoubleTapMaxTime: 0.25
 --- !u!114 &984336865
 MonoBehaviour:
@@ -634,6 +638,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9e243dfd93066f48845cfddd0e6fdd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &984336870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984336856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2964fd69fdb677a44a1518f27bab8430, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EffectPrefab: {fileID: 6318642611981740564, guid: 623e635645d2b67409a054ab8b9567d8,
+    type: 3}
+  Duration: 2
+  Cooldown: 5
+  _isSkillActive: 0
+--- !u!114 &984336871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984336856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e72d3a352fb4d140afce25518309ca4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FirePoint: {fileID: 432601053}
+  ProjectilePrefab: {fileID: 6564985233238165683, guid: eadb1936729e92f4e9faa3a91c662cd3,
+    type: 3}
+  Damage: 250
+  Cooldown: 15
+  _isSkillActive: 0
 --- !u!1 &1443311410
 GameObject:
   m_ObjectHideFlags: 0
@@ -709,14 +748,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LookaheadTime: 0.207
-  m_LookaheadSmoothing: 11.1
+  m_LookaheadSmoothing: 6.5
   m_LookaheadIgnoreY: 0
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
   m_ScreenX: 0.5
   m_ScreenY: 0.5
-  m_CameraDistance: 10
+  m_CameraDistance: 12
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0
   m_DeadZoneDepth: 0
