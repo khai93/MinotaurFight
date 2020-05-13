@@ -596,7 +596,7 @@ MonoBehaviour:
   ProjectilePrefab: {fileID: 5087224083497066643, guid: dae3a6289b8434e44bf4f0f94e0a76fd,
     type: 3}
   ChargeRate: 1
-  Cooldown: 2
+  Cooldown: 0.25
   _isSkillActive: 0
 --- !u!114 &984336867
 MonoBehaviour:
