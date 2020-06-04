@@ -6,7 +6,10 @@ namespace MinotaurFight.Combat
     [RequireComponent(typeof(IEnemy))]
     public class TargetClosestPlayer : MonoBehaviour
     {
-        public float ChaseRange;
+        public float MinChaseRange;
+        public float MaxChaseRange;
+
+        private bool _targeted;
 
         private IEnemy _target;
 
@@ -38,11 +41,18 @@ namespace MinotaurFight.Combat
                 }
             }
 
-            if (closestDistance > ChaseRange)
+
+            var IsOutOfRangeWhileTargeted = (_targeted == true && closestDistance > MaxChaseRange);
+            var IsOutOfRange = (!_targeted && closestDistance > MinChaseRange);
+
+            if (IsOutOfRangeWhileTargeted || IsOutOfRange)
             {
+                _targeted = false;
                 return null;
             }
 
+
+            _targeted = true;
             return closest;
         }
     }

@@ -23,6 +23,18 @@ namespace MinotaurFight.Combat
                 return typeof(IdleState);
             }
 
+            _enemy.transform.position = Vector2.MoveTowards(_enemy.transform.position, _enemy.Target.position, _enemy.MovementSpeed * Time.deltaTime);
+
+            if (_enemy.Target.position.x > _enemy.transform.position.x && !_enemy.IsFacingRight) 
+                _enemy.Flip();
+            if (_enemy.Target.position.x < _enemy.transform.position.x && _enemy.IsFacingRight)
+                _enemy.Flip();
+
+            if (_enemy.DistanceFromTarget() < _enemy.MinAttackRange)
+            {
+                return typeof(AttackState);
+            }
+
             return null;
         }
     }

@@ -27,7 +27,6 @@ namespace MinotaurFight.Combat
             var AvailableStates = _stateMachine.GetAvailableStates().Values.ToList();
             int CurrentStateIndex = AvailableStates.IndexOf(_currentState);
 
-            Debug.Log(CurrentStateIndex);
             _animator.SetInteger("CurrentState", CurrentStateIndex);
             _animator.SetTrigger("ResetState");
         }
