@@ -171,7 +171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effectPrefab: {fileID: 0}
-  Damage: 0
-  DamageMultiplier: 0
+  Damage: 5
+  DamageMultiplier: 1.25
   DestroyOnTouch: 0
   EnemyTag: Enemy
