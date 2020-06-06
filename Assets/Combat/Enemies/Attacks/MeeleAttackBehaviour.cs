@@ -5,7 +5,7 @@ using MinotaurFight.Core;
 
 namespace MinotaurFight.Combat
 {
-    public class MeeleAttack : MonoBehaviour, IAttackBehaviour
+    public class MeeleAttackBehaviour : MonoBehaviour, IAttackBehaviour
     {
         private bool _attacking = false;
         public bool IsAttacking() => _attacking;
@@ -13,18 +13,18 @@ namespace MinotaurFight.Combat
         private bool _stopped = false;
         public bool IsStopped() => _stopped;
 
-        public void Reset() {
+        public void ResetAttack() {
             _attacking = false;
             _stopped = false;
         }
 
-        public void Start()
+        public void StartAttack()
         {
             _attacking = true;
             _stopped = false;
         }
 
-        public void Stop()
+        public void StopAttack()
         {
             _attacking = false;
             _stopped = true;

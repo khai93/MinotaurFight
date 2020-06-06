@@ -24,13 +24,13 @@ namespace MinotaurFight.Combat
 
             if (_enemy.Attack.IsStopped())
             {
-                _enemy.Attack.Reset();
+                _enemy.Attack.ResetAttack();
                 return typeof(ChaseState);
             }
 
             if (!_enemy.Attack.IsAttacking())
             {
-                _enemy.Attack.Start();
+                _enemy.Attack.StartAttack();
             }
 
             return null;

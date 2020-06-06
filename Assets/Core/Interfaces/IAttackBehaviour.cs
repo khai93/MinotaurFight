@@ -2,9 +2,9 @@
 {
     public interface IAttackBehaviour
     {
-        void Start();
-        void Stop();
-        void Reset();
+        void StartAttack();
+        void StopAttack();
+        void ResetAttack();
         bool IsAttacking();
         bool IsStopped();
     }
