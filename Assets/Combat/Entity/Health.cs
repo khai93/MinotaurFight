@@ -55,7 +55,7 @@ namespace MinotaurFight.Combat
             }
         }
 
-        public float GetCurrentHealth()
+        public float GetCurrent()
         {
             return _health;
         }
