@@ -1,28 +1,48 @@
-﻿using MinotaurFight.Core;
-using UnityEngine;
+﻿using UnityEngine;
+using MinotaurFight.Core;
 
 namespace MinotaurFight.Combat
 {
+    [RequireComponent(typeof(Health))]
+    [RequireComponent(typeof(Renderer))]
     [RequireComponent(typeof(IEnemy))]
-    public class TargetClosestPlayer : MonoBehaviour
+    public class TargetOnHit : MonoBehaviour
     {
         public float MinChaseRange;
         public float MaxChaseRange;
 
-        private bool _targeted;
-
+        private Health _health;
         private IEnemy _target;
+
+        private bool _damaged;
+        private bool _targeted;
 
         private void Awake()
         {
+            _health = GetComponent<Health>();
             _target = GetComponent<IEnemy>();
+
+            _health.Damaged += OnDamaged;
         }
+
 
         private void Update()
         {
-            var closest = FindClosestPlayer();
+            if (_damaged == true) {
+                var closest = FindClosestPlayer();
 
-            _target.SetTarget(target: closest);
+                _target.SetTarget(target: closest);
+            }
+        }
+
+        private void OnDamaged()
+        {
+            _damaged = true;
+        }
+
+        private void OnDestroy()
+        {
+            _health.Damaged -= OnDamaged;
         }
 
         public Transform FindClosestPlayer()
@@ -41,7 +61,6 @@ namespace MinotaurFight.Combat
                 }
             }
 
-
             var IsOutOfRangeWhileTargeted = (_targeted == true && closestDistance > MaxChaseRange);
             var IsOutOfRange = (!_targeted && closestDistance > MinChaseRange);
 
@@ -50,7 +69,6 @@ namespace MinotaurFight.Combat
                 _targeted = false;
                 return null;
             }
-
 
             _targeted = true;
             return closest;

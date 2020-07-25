@@ -7,6 +7,7 @@ namespace MinotaurFight.Combat
     [RequireComponent(typeof(SpriteRenderer))]
     [RequireComponent(typeof(KeyboardKeyBinder))]
     [RequireComponent(typeof(EntityKnockback))]
+    [RequireComponent(typeof(BoxCollider2D))]
     [RequireComponent(typeof(Animator))]
     public class PlayerMovement : MonoBehaviour
     {
@@ -34,6 +35,7 @@ namespace MinotaurFight.Combat
         private KeyboardKeyBinder _keyBinder;
         private Animator _anim;
         private EntityKnockback _knockback;
+        private BoxCollider2D _collide;
 
         private void Awake()
         {
@@ -42,6 +44,7 @@ namespace MinotaurFight.Combat
             _keyBinder = GetComponent<KeyboardKeyBinder>();
             _anim = GetComponent<Animator>();
             _knockback = GetComponent<EntityKnockback>();
+            _collide = GetComponent<BoxCollider2D>();
             _dashesLeft = MaxDashes;
         }
 
@@ -74,7 +77,9 @@ namespace MinotaurFight.Combat
                 if (_lastTapDirection == Direction.Left && lastTapInRange && _dashesLeft > 0)
                 {
                     _dashesLeft--;
+                    _collide.enabled = false;
                     _knockback.Knockback(50);
+                    _collide.enabled = true;
                 } else 
                 {
                     _lastTapTime = Time.time;
@@ -93,7 +98,9 @@ namespace MinotaurFight.Combat
                 if (_lastTapDirection == Direction.Right && lastTapInRange && _dashesLeft > 0)
                 {
                     _dashesLeft--;
+                    
                     _knockback.Knockback(-50);
+                   
                 } else
                 {
                     _lastTapTime = Time.time;

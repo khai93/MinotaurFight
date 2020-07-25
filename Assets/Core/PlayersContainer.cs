@@ -23,6 +23,8 @@ namespace MinotaurFight.Core
             }
         }
 
+       
+
         public static bool IsAlive() => Instance.Players.Any(p => p.gameObject.activeSelf);
     }
 
