@@ -1,4 +1,5 @@
 ﻿using MinotaurFight.Core;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace MinotaurFight.Combat
@@ -18,14 +19,23 @@ namespace MinotaurFight.Combat
         private bool DestroyOnTouch;
 
         [SerializeField]
-        private string EnemyTag;
+        private string EnemyTag; 
+
+        private List<int> HitList = new List<int>();
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.CompareTag(EnemyTag))
             {
                 TryShowEffect();
-                DealDamage(collision);
+
+                var id = collision.gameObject.GetInstanceID();
+
+                if (!HitList.Contains(id))
+                {
+                    DealDamage(collision);
+                    HitList.Add(id);
+                }
 
                 if (DestroyOnTouch)
                 {
@@ -56,8 +66,8 @@ namespace MinotaurFight.Combat
 
         private void DealDamage(Collider2D collision)
         {
-            IDamageable _takeDamage = collision.GetComponent<IDamageable>();
-            _takeDamage.TakeDamage(Damage * DamageMultiplier);
+            IDamageable _takeDamage = collision?.GetComponent<IDamageable>();
+            _takeDamage?.TakeDamage(Damage * DamageMultiplier);
         }
     }
 }

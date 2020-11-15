@@ -27,6 +27,7 @@ namespace MinotaurFight.Combat
         public void SetLifetime(float lifetime)
         {
             LifeTime = lifetime;
+            _deathTime = Time.time + LifeTime;
         }
     }
 }
